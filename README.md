@@ -1,5 +1,24 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+# Galileo - Providers Dashboard (Test App) 
+
+## Overview
+As part of Galileo’s efforts to make healthcare more efficient, we’d like our doctors to manage their schedules and get a holistic view of the tasks Galileo is working on. This is a frontend only application that provides a dashboard for an admin to view tasks currently assigned to doctors.
+
+## Features
++ Allows the user to add new doctors to the view from a list of existing doctors 
++ Adding a doctor will also add the list of tasks for that doctor
++ Tasks for each doctor show up stacked in order of priority (highest at the top) and each task has only one owner 
++ As more doctors are added into the view the existing ones remain instead of being replaced
+
+## Component Design
+To meet the most basic requirements, this app has five primary React components: 
++ `ProviderDashboard`
++ `SearchProviders`
++ `Provider`
++ `TasksIndex`
++ `Tasks`
+
 ## Available Scripts
 
 In the project directory, you can run:
