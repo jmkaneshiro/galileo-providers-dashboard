@@ -1,11 +1,11 @@
 import React from 'react';
-import ProviderDashboard from './ProviderDashboard';
-
+import PracticeDashboard from './PracticeDashboard';
+import { SelectedPractitionersProvider } from '../contexts/SelectedPractitionersContext';
 function App() {
   return (
-    <>
-      <ProviderDashboard />
-    </>
+    <SelectedPractitionersProvider>
+      <PracticeDashboard />
+    </SelectedPractitionersProvider>
   );
 }
 
