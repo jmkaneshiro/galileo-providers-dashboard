@@ -37,7 +37,6 @@ const PractitionerSearch = () => {
   };
 
   const handleProviderAdded = (async () => {
-    debugger
     if (Object.keys(practitionerToAdd).length === 0) {
       closeModal();
     } else {
