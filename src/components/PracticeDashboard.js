@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { Header, Grid, Card, Image } from 'semantic-ui-react';
+import { Header, Grid, Card } from 'semantic-ui-react';
 import UserProfile from './UserProfile';
 import PractitionerSearch from './PractitionerSearch';
 import PractitionerCard from './PractitionerCard';
@@ -25,7 +25,7 @@ const style = {
 };
 
 const PracticeDashboard = () => {
-  const [selectedPractitioners, setSelectedPractitioners] = useContext(SelectedPractitionersContext);
+  const [selectedPractitioners] = useContext(SelectedPractitionersContext);
 
   return (
     <>

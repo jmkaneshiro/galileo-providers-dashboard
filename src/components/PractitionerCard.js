@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Card, Image } from 'semantic-ui-react';
-import userImage from '../images/user-image.png';
-
+import { Card } from 'semantic-ui-react';
+import { SelectedPractitionersContext } from '../contexts/SelectedPractitionersContext';
+import { AvailPractitionersContext } from '../contexts/AvailPractitionersContext';
 
 const Practitioner = ({practitioner}) => {
-  const [userTasks, setUserTasks] = useState([]);
+  const [allTasks, setAllTasks] = useState([]);
   useEffect(() => {
     getTasks();
   }, []);
@@ -13,22 +13,35 @@ const Practitioner = ({practitioner}) => {
     const allTasks = await axios.get(
       'https://testapi.io/api/akirayoglu/0/tasks/getTasks'
     );
-    const userTasks = await allTasks.data.filter(task => task.owner === practitioner.doctor_id);
-    setUserTasks(userTasks);
+    setAllTasks(allTasks.data);
   });
+  const thisUsersTasks = allTasks.filter(task => task.owner === practitioner.doctor_id);
+
+  const [availPractitioners, setAvailPractitioners] = useContext(AvailPractitionersContext);
+  const [selectedPractitioners, setSelectedPractitioners] = useContext(SelectedPractitionersContext);
+
+  //When a practitioner is added to the selected context, they are removed from the available one
+  const handleCloseCard = () => {
+    setAvailPractitioners([...availPractitioners, practitioner]);
+    setSelectedPractitioners(selectedPractitioners.filter(
+      removedPractitioner => removedPractitioner.doctor_id !== practitioner.doctor_id
+    ));
+  };
+
+  const style = {
+    closeCard: {
+      cursor: 'pointer',
+      float: 'right'
+    }
+  };
 
   return (
     <Card as='article' key={practitioner.doctor_id} practitioner={practitioner}>
       <Card.Content>
-        <Image
-          floated='right'
-          size='mini'
-          src={userImage}
-          alt={`${practitioner.first_name} ${practitioner.last_name}'s profile photo`}
-        />
+        <i className="close icon" style={style.closeCard} onClick={handleCloseCard}></i>
         <Card.Header>{`${practitioner.first_name} ${practitioner.last_name}`}</Card.Header>
         <Card.Meta>{`${practitioner.first_name}'s tasks`}</Card.Meta>
-        {userTasks.map(task => {
+        {thisUsersTasks.map(task => {
           return (
             <Card key={task.task_id}>
               <Card.Header textAlign="center">{task.task_id}</Card.Header>
