@@ -13,11 +13,15 @@ As part of Galileo’s efforts to make healthcare more efficient, we’d like ou
 
 ## Component Design
 To meet the most basic requirements, this app has five primary React components: 
-+ `ProviderDashboard`
-+ `SearchProviders`
-+ `Provider`
-+ `TasksIndex`
-+ `Tasks`
++ `PracticeDashboard`
++ `PractitionerSearch`
++ `PractitionerCard`
++ `UserProfile`
+
+## Context Design
+The providers selected and available change dynamically and their states are shared in these contexts:
+`AvailPractitionersContext`
+`SelectedPractitionersContext`
 
 ## Available Scripts
 
