@@ -12,7 +12,7 @@ const style = {
 const UserProfile = () => {
   return (
     <Segment as='nav' style={style.wrapper}>
-      <Image src={userImage} size='small' alt="user profile image" className="ui centered image circular" />
+      <Image src={userImage} size='mini' alt="user profile image" className="ui centered image circular" />
       <Header as='h3' textAlign='center'>Current User Admin</Header>
     </Segment>
   );
