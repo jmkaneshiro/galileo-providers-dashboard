@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Modal, Dropdown } from 'semantic-ui-react';
-import axios from 'axios';
 import { SelectedPractitionersContext } from '../contexts/SelectedPractitionersContext';
+import { AvailPractitionersContext } from '../contexts/AvailPractitionersContext';
 
 const PractitionerSearch = () => {
   //Modal state and functions
@@ -9,38 +9,28 @@ const PractitionerSearch = () => {
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => setModalIsOpen(false);
 
-  //Get a list of the all available providers
-  const [practitioners, setPractitioners] = useState([]);
-  useEffect(() => {
-    getPractitioners();
-  }, []);
-  const getPractitioners = (async () => {
-    const practitioners = await axios.get(
-      'https://testapi.io/api/akirayoglu/0/reference/getDoctors'
-    );
-    const practitionerOptions = await practitioners.data.map(practitioner =>
-        ({
-          key: practitioner.doctor_id,
-          text: `${practitioner.first_name} ${practitioner.last_name}`,
-          value: practitioner
-        })
-    );
-
-    setPractitioners(practitionerOptions);
-  });
+  const [availPractitioners, setAvailPractitioners] = useContext(AvailPractitionersContext);
+  const practitionerOptions = availPractitioners.map(practitioner =>
+    ({
+      key: practitioner.doctor_id,
+      text: `${practitioner.first_name} ${practitioner.last_name}`,
+      value: practitioner.doctor_id
+    })
+  );
 
   const [selectedPractitioners, setSelectedPractitioners] = useContext(SelectedPractitionersContext);
   const [practitionerToAdd, setPractitionerToAdd] = useState({});
 
   const handleDropdownChange = (event, data) => {
-    setPractitionerToAdd(data.value);
+    setPractitionerToAdd(availPractitioners.filter(practitioner => practitioner.doctor_id === data.value)[0]);
   };
 
+  //When a practitioner is added to the selected context, they are removed from the available one
   const handleProviderAdded = (async () => {
     if (Object.keys(practitionerToAdd).length === 0) {
       closeModal();
     } else {
-      await setPractitioners(practitioners.filter(practitioner => practitioner.value !== practitionerToAdd));
+      await setAvailPractitioners(availPractitioners.filter(availPractitioner => availPractitioner !== practitionerToAdd));
       await setSelectedPractitioners([...selectedPractitioners, practitionerToAdd]);
       await setPractitionerToAdd({});
       closeModal();
@@ -62,7 +52,7 @@ const PractitionerSearch = () => {
           fluid
           search
           selection 
-          options={practitioners}
+          options={practitionerOptions}
           onChange={handleDropdownChange}
           clearable
         />
