@@ -1,21 +1,25 @@
 import React, {useContext} from 'react';
-import { Header, Grid, FormButton } from 'semantic-ui-react';
+import { Header, Grid, Card, Image } from 'semantic-ui-react';
 import UserProfile from './UserProfile';
 import PractitionerSearch from './PractitionerSearch';
+import PractitionerCard from './PractitionerCard';
 import { SelectedPractitionersContext } from '../contexts/SelectedPractitionersContext';
 
 const style = {
   topSection: {
     paddingTop: '2em',
   },
-  test: {
+  topHeader: {
+    marginTop: '2em'
+  },
+  nav: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   providersGrid: {
-    marginTop: '-15em',
+    marginTop: '-5em',
     marginLeft: '1em'
   }
 };
@@ -30,20 +34,20 @@ const PracticeDashboard = () => {
         <Grid.Column width={8}>
           <Header as='h1' style={style.topHeader} textAlign='center'>Provider Dashboard</Header>
         </Grid.Column>
-        <Grid.Column width={4} style={style.test}>
+        <Grid.Column width={4} style={style.nav}>
           <UserProfile />
           <PractitionerSearch />
         </Grid.Column>
-        <section style={style.providersGrid}>
-          <ul>
-            {selectedPractitioners.map(practitioner => {
-              return (
-              <li key={practitioner.doctor_id}>{practitioner.first_name} {practitioner.last_name}</li>
-              )
-            })}
-          </ul>
-        </section>
       </Grid>
+      <main style={style.providersGrid}>
+        <Card.Group as="section" centered>
+          {selectedPractitioners.map(practitioner => {
+            return (
+              <PractitionerCard key={practitioner.doctor_id} practitioner={practitioner} />
+            )
+          })}
+        </Card.Group>
+      </main>
     </>
   );
 }
