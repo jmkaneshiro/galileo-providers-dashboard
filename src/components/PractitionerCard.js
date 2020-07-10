@@ -5,17 +5,16 @@ import { SelectedPractitionersContext } from '../contexts/SelectedPractitionersC
 import { AvailPractitionersContext } from '../contexts/AvailPractitionersContext';
 
 const Practitioner = ({practitioner}) => {
-  const [allTasks, setAllTasks] = useState([]);
+  const [assignedTasks, setAssignedTasks] = useState([]);
   useEffect(() => {
     getTasks();
   }, []);
   const getTasks = (async () => {
-    const allTasks = await axios.get(
-      'https://testapi.io/api/akirayoglu/0/tasks/getTasks'
+    const assignedTasks = await axios.get(
+      `https://testapi.io/api/akirayoglu/0/tasks/${practitioner.doctor_id}`
     );
-    setAllTasks(allTasks.data);
+    setAssignedTasks(assignedTasks.data);
   });
-  const thisUsersTasks = allTasks.filter(task => task.owner === practitioner.doctor_id);
 
   const [availPractitioners, setAvailPractitioners] = useContext(AvailPractitionersContext);
   const [selectedPractitioners, setSelectedPractitioners] = useContext(SelectedPractitionersContext);
@@ -43,7 +42,7 @@ const Practitioner = ({practitioner}) => {
         <Card.Meta>{`${practitioner.first_name}'s tasks`}</Card.Meta>
         <Segment.Group>
           <Segment inverted color="red">High Priority</Segment>
-          {thisUsersTasks.map(task => {
+          {assignedTasks.map(task => {
             if (parseInt(task.priority) === 1)
             return (
               <Segment key={task.task_id} id={task.task_id}>
@@ -55,7 +54,7 @@ const Practitioner = ({practitioner}) => {
         </Segment.Group>
         <Segment.Group>
           <Segment inverted color="orange">Medium Priority</Segment>
-          {thisUsersTasks.map(task => {
+          {assignedTasks.map(task => {
             if (parseInt(task.priority) === 2 || parseInt(task.priority) === 3)
             return (
               <Segment key={task.task_id} id={task.task_id}>
@@ -67,7 +66,7 @@ const Practitioner = ({practitioner}) => {
         </Segment.Group>
         <Segment.Group>
           <Segment inverted color="grey">Low Priority</Segment>
-          {thisUsersTasks.map(task => {
+          {assignedTasks.map(task => {
             if (parseInt(task.priority) > 3) 
             return (
               <Segment key={task.task_id} id={task.task_id}>
