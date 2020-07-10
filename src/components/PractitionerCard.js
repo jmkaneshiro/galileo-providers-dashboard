@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { Card } from 'semantic-ui-react';
+import { Card, Segment, Header } from 'semantic-ui-react';
 import { SelectedPractitionersContext } from '../contexts/SelectedPractitionersContext';
 import { AvailPractitionersContext } from '../contexts/AvailPractitionersContext';
 
@@ -41,16 +41,42 @@ const Practitioner = ({practitioner}) => {
         <i className="close icon" style={style.closeCard} onClick={handleCloseCard}></i>
         <Card.Header>{`${practitioner.first_name} ${practitioner.last_name}`}</Card.Header>
         <Card.Meta>{`${practitioner.first_name}'s tasks`}</Card.Meta>
-        {thisUsersTasks.map(task => {
-          return (
-            <Card key={task.task_id}>
-              <Card.Header textAlign="center">{task.task_id}</Card.Header>
-              <Card.Content>
+        <Segment.Group>
+          <Segment inverted color="red">High Priority</Segment>
+          {thisUsersTasks.map(task => {
+            if (parseInt(task.priority) === 1)
+            return (
+              <Segment key={task.task_id} id={task.task_id}>
+                <p>{`Task: ${task.task_id}`}</p>
                 <div>{`Priority: ${task.priority}`}</div>
-              </Card.Content>
-            </Card>
-          )
-        })}
+              </Segment>
+            )
+          })}
+        </Segment.Group>
+        <Segment.Group>
+          <Segment inverted color="orange">Medium Priority</Segment>
+          {thisUsersTasks.map(task => {
+            if (parseInt(task.priority) === 2 || parseInt(task.priority) === 3)
+            return (
+              <Segment key={task.task_id} id={task.task_id}>
+                <p>{`Task: ${task.task_id}`}</p>
+                <div>{`Priority: ${task.priority}`}</div>
+              </Segment>
+            )
+          })}
+        </Segment.Group>
+        <Segment.Group>
+          <Segment inverted color="grey">Low Priority</Segment>
+          {thisUsersTasks.map(task => {
+            if (parseInt(task.priority) > 3) 
+            return (
+              <Segment key={task.task_id} id={task.task_id}>
+                <p>{`Task: ${task.task_id}`}</p>
+                <div>{`Priority: ${task.priority}`}</div>
+              </Segment>
+            )
+          })}
+        </Segment.Group>
       </Card.Content>
     </Card>
   )
