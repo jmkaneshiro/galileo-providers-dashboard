@@ -19,27 +19,28 @@ const PractitionerSearch = () => {
   );
 
   const [selectedPractitioners, setSelectedPractitioners] = useContext(SelectedPractitionersContext);
-  const [practitionerToAdd, setPractitionerToAdd] = useState({});
+  const [practitionersToAdd, setPractitionersToAdd] = useState([]);
 
   const handleDropdownChange = (event, data) => {
-    setPractitionerToAdd(availPractitioners.filter(practitioner => practitioner.doctor_id === data.value)[0]);
+    setPractitionersToAdd(data.value);
   };
 
   //When a practitioner is added to the selected context, they are removed from the available one
-  const handleProviderAdded = (async () => {
-    if (Object.keys(practitionerToAdd).length === 0) {
+  const handlePractitionersAdded = (async () => {
+    const toAdd = availPractitioners.filter(practitioner => practitionersToAdd.includes(practitioner.doctor_id));
+    if (Object.keys(toAdd).length === 0) {
       closeModal();
     } else {
-      await setAvailPractitioners(availPractitioners.filter(availPractitioner => availPractitioner !== practitionerToAdd));
-      await setSelectedPractitioners([...selectedPractitioners, practitionerToAdd]);
-      await setPractitionerToAdd({});
+      await setAvailPractitioners(availPractitioners.filter(availPractitioner => !toAdd.includes(availPractitioner)));
+      await setSelectedPractitioners([...selectedPractitioners, ...toAdd]);
+      await setPractitionersToAdd([]);
       closeModal();
     }
   });
 
   return (
     <Modal
-      trigger={<Button onClick={openModal}>Add Provider</Button>}
+      trigger={<Button onClick={openModal}>Add Providers</Button>}
       size='tiny'
       open={modalIsOpen}
     >
@@ -51,6 +52,7 @@ const PractitionerSearch = () => {
           placeholder="select a provider"
           fluid
           search
+          multiple
           selection 
           options={practitionerOptions}
           onChange={handleDropdownChange}
@@ -60,7 +62,7 @@ const PractitionerSearch = () => {
       </Modal.Content>
       <Modal.Actions>
         <Button key='cancel' onClick={closeModal}>Cancel</Button>
-        <Button key='submit' positive={true} onClick={ handleProviderAdded }>Submit</Button>
+        <Button key='submit' positive={true} onClick={handlePractitionersAdded }>Submit</Button>
       </Modal.Actions>
     </Modal>
   )
